@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+input[type="number"]::-webkit-inner-spin-button{
+  display: none;
+}
+
+input[type="number"]{
+  -moz-appearance: textfield;
+}
+
+body::-webkit-scrollbar{
+  display: none;
+}
+
+/* Add this to your CSS file or styled-jsx */
+canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+@media (max-width: 768px) {
+  canvas {
+    width: 100% !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+}
