@@ -479,7 +479,7 @@ useEffect(() => {
                   </div>
                   <h3 className="text-3xl font-bold text-gray-900 mb-4">Results Not Available</h3>
                   <p className="text-gray-600 text-lg">
-                    "Sorry, the results for this competition haven’t been uploaded yet."
+                    Sorry, the results for this competition haven&#39;t been uploaded yet.
                   </p>
                 </div>
               </div>
