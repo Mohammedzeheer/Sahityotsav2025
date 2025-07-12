@@ -46,15 +46,15 @@ export async function POST(req) {
         }
 
         // Validate that winners are from different teams (optional business rule)
-        const teams = [firstUnit, secondUnit, thirdUnit];
-        const uniqueTeams = [...new Set(teams)];
+        // const teams = [firstUnit, secondUnit, thirdUnit];
+        // const uniqueTeams = [...new Set(teams)];
         
-        if (uniqueTeams.length !== teams.length) {
-            return NextResponse.json({ 
-                message: "Winners must be from different teams", 
-                status: 400 
-            }, { status: 400 });
-        }
+        // if (uniqueTeams.length !== teams.length) {
+        //     return NextResponse.json({ 
+        //         message: "Winners must be from different teams", 
+        //         status: 400 
+        //     }, { status: 400 });
+        // }
 
         // Create new result
         const newResult = await ResultModel.create({
