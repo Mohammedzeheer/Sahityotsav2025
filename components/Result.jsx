@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useEffect, useState } from 'react'
 import Image from "next/image";
-import temp from "../public/assets/ResultPoster.jpeg";
+import temp from "../public/assets/ResultPoster.jpg";
 import axios from "axios";
 import { Trophy, Download, Search, Award, Medal, Crown, Users, Filter, Sparkles, ChevronDown } from 'lucide-react';
 
