@@ -87,6 +87,7 @@ export async function GET(req) {
 
         const events = await EventModel.find(query)
             // .sort({ eventDate: 1, eventTime: 1 }) // Sort by upcoming events first
+            .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
 
