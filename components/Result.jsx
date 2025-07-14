@@ -98,13 +98,10 @@ function Result() {
       const canvas = canvasRef.current;
       const container = canvas.parentElement;
       const containerWidth = container.offsetWidth;
-      
-      // Calculate scale based on container width
-      const maxWidth = Math.min(containerWidth * 0.9, 800); // 90% of container or max 800px
+      const maxWidth = Math.min(containerWidth * 0.9, 800);
       const originalWidth = imageRef.current.width;
       const scale = maxWidth / originalWidth;
       
-      // Apply responsive sizing
       canvas.style.width = `${originalWidth * scale}px`;
       canvas.style.height = `${imageRef.current.height * scale}px`;
       canvas.style.maxWidth = '100%';
@@ -119,85 +116,137 @@ function Result() {
   return () => window.removeEventListener('resize', handleResize);
 }, [displayedResult, imageLoaded]);
 
-// Updated canvas drawing effect with mobile considerations
+// // Updated canvas drawing effect with mobile considerations
+// useEffect(() => {
+//   if (imageLoaded && canvas && image && displayedResult.length > 0) {
+//     const context = canvas.getContext("2d");
+
+//     if (context) {
+//       // Set canvas internal resolution
+//       canvas.width = image.width;
+//       canvas.height = image.height;
+      
+//       // Clear and draw background
+//       context.clearRect(0, 0, canvas.width, canvas.height);
+//       context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+//       // Set text properties
+//       context.textAlign = 'left';
+//       context.textBaseline = 'top';
+
+//       // Category text
+//       context.font = "300 60px Poppins, sans-serif";
+//       context.fillStyle = "#000000";
+//       context.fillText(displayedResult[0].category, 940, 1130);
+
+//       // Item text
+//       context.font = "600 70px Poppins, sans-serif";
+//       context.fillStyle = "#000000";
+//       context.fillText(displayedResult[0].item, 940, 1190);
+
+//       // First Place
+//       context.font = "600 65px Poppins, sans-serif";
+//       context.fillStyle = "#000000";
+//       context.fillText(displayedResult[0].firstName.toUpperCase(), 940, 1380);
+
+//       context.font = "400 40px Poppins, sans-serif";
+//       context.fillStyle = "#666666";
+//       context.fillText(displayedResult[0].firstUnit, 940, 1440);
+
+//       // Second Place
+//       context.font = "600 65px Poppins, sans-serif";
+//       context.fillStyle = "#000000";
+//       context.fillText(displayedResult[0].secondName.toUpperCase(), 940, 1550);
+
+//       context.font = "400 40px Poppins, sans-serif";
+//       context.fillStyle = "#666666";
+//       context.fillText(displayedResult[0].secondUnit, 940, 1610);
+
+//       // Third Place
+//       context.font = "600 65px Poppins, sans-serif";
+//       context.fillStyle = "#000000";
+//       context.fillText(displayedResult[0].thirdName.toUpperCase(), 940, 1720);
+
+//       context.font = "400 40px Poppins, sans-serif";
+//       context.fillStyle = "#666666";
+//       context.fillText(displayedResult[0].thirdUnit, 940, 1780);
+
+//       // Add current date
+//       const currentDate = new Date().toLocaleDateString('en-US', {
+//         year: 'numeric',
+//         month: 'long',
+//         day: 'numeric'
+//       });
+
+//       context.font = "400 14px Poppins, sans-serif";
+//       context.fillStyle = "#666666";
+//       context.fillText(currentDate, canvas.width - 150, canvas.height - 30);
+
+//       // Apply responsive sizing after drawing
+//       const container = canvas.parentElement;
+//       const containerWidth = container.offsetWidth;
+//       const maxWidth = Math.min(containerWidth * 0.9, 800);
+//       const scale = maxWidth / canvas.width;
+      
+//       canvas.style.width = `${canvas.width * scale}px`;
+//       canvas.style.height = `${canvas.height * scale}px`;
+//       canvas.style.maxWidth = '100%';
+//       canvas.style.height = 'auto';
+//     }
+//   }
+// }, [displayedResult, canvas, image, imageLoaded]);
+
 useEffect(() => {
   if (imageLoaded && canvas && image && displayedResult.length > 0) {
     const context = canvas.getContext("2d");
+    if (!context) return;
 
-    if (context) {
-      // Set canvas internal resolution
-      canvas.width = image.width;
-      canvas.height = image.height;
-      
-      // Clear and draw background
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    canvas.width = image.width;
+    canvas.height = image.height;
 
-      // Set text properties
-      context.textAlign = 'left';
-      context.textBaseline = 'top';
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-      // Category text
-      context.font = "300 60px Poppins, sans-serif";
-      context.fillStyle = "#000000";
-      context.fillText(displayedResult[0].category, 940, 1130);
+    context.textAlign = 'left';
+    context.textBaseline = 'top';
 
-      // Item text
-      context.font = "600 70px Poppins, sans-serif";
-      context.fillStyle = "#000000";
-      context.fillText(displayedResult[0].item, 940, 1190);
+    const getFont = (weight, factor) => `${weight} ${canvas.width * factor}px Poppins, sans-serif`;
 
-      // First Place
-      context.font = "600 65px Poppins, sans-serif";
-      context.fillStyle = "#000000";
-      context.fillText(displayedResult[0].firstName.toUpperCase(), 940, 1380);
+    // Helper to draw text at % position
+    const drawText = (text, fontWeight, fontFactor, color, xRatio, yRatio) => {
+      context.font = getFont(fontWeight, fontFactor);
+      context.fillStyle = color;
+      context.fillText(text, canvas.width * xRatio, canvas.height * yRatio);
+    };
 
-      context.font = "400 40px Poppins, sans-serif";
-      context.fillStyle = "#666666";
-      context.fillText(displayedResult[0].firstUnit, 940, 1440);
+    // Draw content with responsive font scaling
+    drawText(displayedResult[0].category, "300", 0.025, "#000000", 0.49, 0.465);
+    drawText(displayedResult[0].item, "600", 0.03, "#000000", 0.49, 0.49);
 
-      // Second Place
-      context.font = "600 65px Poppins, sans-serif";
-      context.fillStyle = "#000000";
-      context.fillText(displayedResult[0].secondName.toUpperCase(), 940, 1550);
+    drawText(displayedResult[0].firstName.toUpperCase(), "600", 0.028, "#000000", 0.49, 0.575);
+    drawText(displayedResult[0].firstUnit, "400", 0.017, "#666666", 0.491, 0.598);
 
-      context.font = "400 40px Poppins, sans-serif";
-      context.fillStyle = "#666666";
-      context.fillText(displayedResult[0].secondUnit, 940, 1610);
+    drawText(displayedResult[0].secondName.toUpperCase(), "600", 0.028, "#000000", 0.49, 0.645);
+    drawText(displayedResult[0].secondUnit, "400", 0.017, "#666666", 0.491, 0.668);
 
-      // Third Place
-      context.font = "600 65px Poppins, sans-serif";
-      context.fillStyle = "#000000";
-      context.fillText(displayedResult[0].thirdName.toUpperCase(), 940, 1720);
+    drawText(displayedResult[0].thirdName.toUpperCase(), "600", 0.028, "#000000", 0.49, 0.715);
+    drawText(displayedResult[0].thirdUnit, "400", 0.017, "#666666", 0.491, 0.738);
 
-      context.font = "400 40px Poppins, sans-serif";
-      context.fillStyle = "#666666";
-      context.fillText(displayedResult[0].thirdUnit, 940, 1780);
+    // Current date
+    const currentDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    drawText(currentDate, "400", 0.012, "#666666", 0.85, 0.95);
 
-      // Add current date
-      const currentDate = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-
-      context.font = "400 14px Poppins, sans-serif";
-      context.fillStyle = "#666666";
-      context.fillText(currentDate, canvas.width - 150, canvas.height - 30);
-
-      // Apply responsive sizing after drawing
-      const container = canvas.parentElement;
-      const containerWidth = container.offsetWidth;
-      const maxWidth = Math.min(containerWidth * 0.9, 800);
-      const scale = maxWidth / canvas.width;
-      
-      canvas.style.width = `${canvas.width * scale}px`;
-      canvas.style.height = `${canvas.height * scale}px`;
-      canvas.style.maxWidth = '100%';
-      canvas.style.height = 'auto';
-    }
+    // Apply responsive sizing visually
+    canvas.style.width = '100%';
+    canvas.style.height = 'auto';
   }
 }, [displayedResult, canvas, image, imageLoaded]);
+
+
 
 
   useEffect(() => {
@@ -423,7 +472,7 @@ useEffect(() => {
                 </div>
 
                 {/* Certificate Preview */}
-                <div className="hidden md:block bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 rounded-3xl p-10 border-2 border-purple-200">
+                <div className=" bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 rounded-3xl p-10 border-2 border-purple-200">
                   <div className="text-center mb-8">
                     <div className="flex items-center justify-center space-x-3 mb-4">
                       <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl p-3">
@@ -460,10 +509,10 @@ useEffect(() => {
                   <div className="text-center">
                     <button
                       onClick={handleDownload}
-                      className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 text-white px-12 py-5 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 flex items-center space-x-4 mx-auto"
+                      className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 text-white px-6 py-3 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 flex items-center space-x-2 mx-auto"
                     >
                       <Download className="w-8 h-8" />
-                      <span>Download Certificate</span>
+                      <span>Download</span>
                     </button>
                   </div>
                 </div>
